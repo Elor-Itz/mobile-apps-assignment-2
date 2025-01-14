@@ -2,11 +2,11 @@ package com.example.studentsapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentsapp.model.Model
-import com.example.studentsapp.model.Student
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class StudentListActivity : AppCompatActivity(), StudentAdapter.OnStudentClickListener {
@@ -29,12 +29,12 @@ class StudentListActivity : AppCompatActivity(), StudentAdapter.OnStudentClickLi
 
         // Handle Add Button click
         addButton.setOnClickListener {
-            startActivity(Intent(this, NewStudentActivity))
+            startActivity(Intent(this, NewStudentActivity::class.java))
         }
     }
 
     override fun onStudentClick(position: Int) {
-        val intent = Intent(this, StudentDetailsActivity)
+        val intent = Intent(this, StudentDetailsActivity::class.java)
         intent.putExtra("STUDENT_POSITION", position)
         startActivity(intent)
     }

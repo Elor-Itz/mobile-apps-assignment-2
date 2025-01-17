@@ -24,11 +24,14 @@ class StudentAdapter(
         val checkbox: CheckBox = view.findViewById(R.id.studentCheckBox)
 
         init {
+            // Click listener for the entire item
             view.setOnClickListener {
                 listener.onStudentClick(adapterPosition)
             }
 
-            checkbox.setOnCheckedChangeListener { _, isChecked ->
+            // Checkbox change listener
+            checkbox.setOnClickListener {
+                val isChecked = checkbox.isChecked
                 listener.onCheckChanged(adapterPosition, isChecked)
             }
         }
@@ -42,9 +45,19 @@ class StudentAdapter(
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
         val student = students[position]
+
+        // Bind data to views
         holder.nameTextView.text = student.name
         holder.phoneTextView.text = student.phone
+
+        // Avoid triggering listener during binding
+        holder.checkbox.setOnCheckedChangeListener(null)
         holder.checkbox.isChecked = student.cb
+
+        // Reattach listener after state update
+        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
+            listener.onCheckChanged(holder.adapterPosition, isChecked)
+        }
     }
 
     override fun getItemCount(): Int = students.size

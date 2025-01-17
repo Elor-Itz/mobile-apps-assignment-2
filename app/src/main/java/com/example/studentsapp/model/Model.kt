@@ -18,7 +18,7 @@ class Model private constructor() {
     }
 
     // Returns all students
-    fun getAllStudents(): List<Student> = data
+    fun getAllStudents(): MutableList<Student> = data
 
     // Adds a student to the list
     fun addStudent(student: Student) {

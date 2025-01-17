@@ -46,7 +46,8 @@ class EditStudentActivity : AppCompatActivity() {
 
                 // Validate input before updating
                 if (updatedName.isNotBlank() && updatedId.isNotBlank() &&
-                    updatedPhone.isNotBlank() && updatedAddress.isNotBlank()) {
+                    updatedPhone.isNotBlank() && updatedAddress.isNotBlank()
+                ) {
 
                     // Update the student object
                     student.apply {
@@ -68,9 +69,6 @@ class EditStudentActivity : AppCompatActivity() {
                     Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show()
                 }
             }
-        } else {
-            Toast.makeText(this, "Invalid student data!", Toast.LENGTH_SHORT).show()
-            finish()
         }
     }
 }

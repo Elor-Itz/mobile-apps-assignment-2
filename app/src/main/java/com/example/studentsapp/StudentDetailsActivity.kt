@@ -20,18 +20,33 @@ class StudentDetailsActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val updatedStudent = result.data?.getParcelableExtra<Student>("UPDATED_STUDENT")
             val studentPosition = result.data?.getIntExtra("STUDENT_POSITION", -1)
+            val deleted = result.data?.getBooleanExtra("DELETED", false) ?: false
 
-            if (updatedStudent != null && studentPosition != null && studentPosition != -1) {
-                // Update repository
-                repository.getAllStudents()[studentPosition] = updatedStudent
+            if (deleted && studentPosition != null && studentPosition != -1) {
+                // Remove the student from the repository
+                if (studentPosition in repository.getAllStudents().indices) {
+                    repository.getAllStudents().removeAt(studentPosition)
 
-                // Refresh UI
-                displayStudentDetails(updatedStudent)
-                Toast.makeText(this, "Details updated successfully!", Toast.LENGTH_SHORT).show()
+                    // Notify RecyclerView of the removal
+                    Toast.makeText(this, "Student deleted successfully!", Toast.LENGTH_SHORT).show()
+
+                    // Returning to the previous activity (RecyclerView)
+                    setResult(RESULT_OK)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Error: Invalid position for deletion!", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                Toast.makeText(this, "Failed to update details!", Toast.LENGTH_SHORT).show()
+                // Handle the update case
+                val updatedStudent = result.data?.getParcelableExtra<Student>("UPDATED_STUDENT")
+                if (updatedStudent != null && studentPosition != null && studentPosition != -1) {
+                    repository.getAllStudents()[studentPosition] = updatedStudent
+                    displayStudentDetails(updatedStudent)
+                    Toast.makeText(this, "Details updated successfully!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Failed to update details!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -45,11 +60,12 @@ class StudentDetailsActivity : AppCompatActivity() {
         val phoneTextView: TextView = findViewById(R.id.studentDetailsPhone)
         val addressTextView: TextView = findViewById(R.id.studentDetailsAddress)
         val editButton: Button = findViewById(R.id.editStudentButton)
+        val deleteButton: Button = findViewById(R.id.deleteStudentButton)
 
         // Retrieve the student position
         position = intent.getIntExtra("STUDENT_POSITION", -1)
 
-        if (position != -1) {
+        if (position in repository.getAllStudents().indices) {
             val student = repository.getAllStudents()[position]
             displayStudentDetails(student)
 
@@ -60,6 +76,19 @@ class StudentDetailsActivity : AppCompatActivity() {
                 }
                 editStudentLauncher.launch(intent)
             }
+
+            deleteButton.setOnClickListener {
+                // Handle deletion
+                if (position != -1) {
+                    repository.getAllStudents().removeAt(position)
+                    Toast.makeText(this, "Student deleted successfully!", Toast.LENGTH_SHORT).show()
+                    setResult(RESULT_OK) // Notify RecyclerView to update
+                    finish() // Go back to the previous activity
+                }
+            }
+        } else {
+            Toast.makeText(this, "Invalid student position!", Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 

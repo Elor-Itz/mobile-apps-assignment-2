@@ -12,7 +12,7 @@ class Model private constructor() {
 
     init {
         // Prepopulate with some sample students
-        for (i in 0 until 20) {
+        for (i in 1..20) {
             addStudent(Student("student $i", "12345678", "", "0541234567", "Tel Aviv", false))
         }
     }

@@ -20,6 +20,7 @@ class StudentAdapter(
 
     inner class StudentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameTextView: TextView = view.findViewById(R.id.studentName)
+        val idTextView: TextView = view.findViewById(R.id.studentId)
         val phoneTextView: TextView = view.findViewById(R.id.studentPhone)
         val checkbox: CheckBox = view.findViewById(R.id.studentCheckBox)
 
@@ -48,6 +49,7 @@ class StudentAdapter(
 
         // Bind data to views
         holder.nameTextView.text = student.name
+        holder.idTextView.text = student.id
         holder.phoneTextView.text = student.phone
 
         // Avoid triggering listener during binding
